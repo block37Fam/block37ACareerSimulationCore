@@ -1,5 +1,10 @@
 # block37ACareerSimulationCore
 
+PK = PRIMARY KEY
+FK = FOREIGN KEY
+
+VARCHAR VARIABLE NEEDS MAX INPUT #
+
 TABLES & RELATATIONSHIPS
 
 ---
@@ -16,7 +21,7 @@ password_hash (TEXT, not null)
 
 created_at (TIMESTAMP, default now())
 
-pdated_at (TIMESTAMP, default now())
+updated_at (TIMESTAMP, default now())
 
 ---
 
