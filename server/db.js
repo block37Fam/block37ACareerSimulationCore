@@ -1,3 +1,9 @@
+require("dotenv").config();
+const uuid = require("uuid");
+const bcrypt = require("bcrypt");
+const { Client } = require("pg");
+const client = new Client(process.env.DATABASE_URL);
+
 const createTables = async () => {
   //Users Table
   const SQL =
@@ -100,3 +106,10 @@ const comparePasswords = async (plainPassword, hashedPassword) => {}; //Compares
 const generateJWT = async (plainPassword, hashedPassword) => {}; //Generates a JWT for authentication
 
 const verifyJWT = async (token) => {}; //Verifies and decodes a JWT
+
+module.exports = {
+  client,
+  uuid,
+  bcrypt,
+  createTables,
+};
