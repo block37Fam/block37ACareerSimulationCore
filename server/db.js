@@ -165,4 +165,8 @@ module.exports = {
   getAllItems,
   getItemById,
   createTables,
+  registerUser,
+  loginUser,
+  getUserById,
+  getAuthenticatedUser,
 };
