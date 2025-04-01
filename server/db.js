@@ -68,9 +68,24 @@ const getAuthenticatedUser = async (token) => {}; //Decodes JWT and fetches logg
 
 // -- Item Management --
 
-const getAllItems = async () => {}; //Fetches all items
+const getAllItems = async () => {
+    const SQL = /*SQL*/ `
+        SELECT *
+        FROM items
+    `;
+    const response = await client.query(SQL);
+    return response.rows;
+}; //Fetches all items
 
-const getItemById = async (itemid) => {}; //Retrieves a single item by ID
+const getItemById = async (item_id) => {
+    const SQL = /*SQL*/ `
+    SELECT * 
+    FROM items
+    WHERE item_id = $1;
+`;
+const response = await client.query(SQL, [user_id]);
+return response.rows;
+}; //Retrieves a single item by ID
 
 // -- Review Management --
 
@@ -112,5 +127,7 @@ module.exports = {
   client,
   uuid,
   bcrypt,
+  getAllItems,
+  getItemById,
   createTables,
 };
