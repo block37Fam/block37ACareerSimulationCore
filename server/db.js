@@ -185,6 +185,15 @@ const seedDatabase = async () => {
     console.log("✅ Reviews seeded:");
 
     // ✅ Seed comments using valid user_id and review_id
+
+    let reviewIds = [];
+    const reviewQueryResult = await client.query("SELECT id FROM reviews");
+    reviewIds = reviewQueryResult.rows.map((row) => row.id);
+
+    if (reviewIds.length === 0) {
+      throw new Error("❌ Cannot seed comments: No reviews found.");
+    }
+
     for (const comment of comments) {
       const randomUserId = userIds[Math.floor(Math.random() * userIds.length)];
       const randomReviewId =
