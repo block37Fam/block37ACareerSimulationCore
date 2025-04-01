@@ -88,7 +88,9 @@ const loginUser = async (email, password) => {
     };
 };
 
-const getUserById = async (userId) => {
+//-- User Management --
+
+const getUserById = async (user_id) => {
     const SQL = /*sql*/`
         SELECT id, username, email, created_at FROM users WHERE id = $1
     `;
@@ -124,13 +126,52 @@ return response.rows;
 
 // -- Review Management --
 
-const getReviewsByItemId = async (itemId) => {}; //Retrieves all reviews for a specific item
+const getReviewsByItemId = async (item_id) => {
+    const SQL = /*SQL*/ `
+    SELECT * 
+    FROM reviews
+    WHERE item_id = $1;
+`;
+const response = await client.query(SQL, [item_id]);
+return response.rows;
+}; //Retrieves all reviews for a specific item
 
-const getReviewById = async (reviewId) => {}; //Retrieves a specific review
+const getReviewById = async (review_id) => {
+    const SQL = /*SQL*/ `
+    SELECT * 
+    FROM reviews
+    WHERE review_id = $1;
+`;
+const response = await client.query(SQL, [review_id]);
+return response.rows;
+}; //Retrieves a specific review
 
-const createReview = async (userId, itemId, rating, reviewText) => {}; //Adds a new review
+const createReview = async (user_id, item_id, rating, reviewText) => {
+    const SQL = /*SQL*/ `
+    INSERT INTO reviews(id, user_id, item_id, rating, reviewText) VALUES($1, $2, $3, $4) RETURNING *;
+  `;
+  const response = await client.query(SQL, [uuid.v4(), user_id, item_id, rating, reviewText])
+  return response.rows[0]
+}; //Adds a new review
 
-const deleteReview = async (userId, reviewId) => {}; //Deletes a review
+const deleteReview = async ({ user_id, id }) => { //id is review_id
+    const SQL = /*SQL*/ ` 
+    DELETE FROM reviews 
+    WHERE user_id = $1 AND id = $2;
+    `;
+    await client.query(SQL, [user_id, id])
+}; //Deletes a review
+
+const editReview = async ({ user_id, id, rating, reviewText }) => { // id is review_id
+    const SQL = /*SQL*/ ` 
+      UPDATE reviews 
+      SET rating = $3, review_text = $4, updated_at = NOW()
+      WHERE user_id = $1 AND id = $2
+      RETURNING *;
+    `;
+    const { rows } = await client.query(SQL, [user_id, id, rating, reviewText]);
+    return rows[0]; // returns the updated review
+  };
 
 // -- User Review Management --
 
@@ -164,5 +205,10 @@ module.exports = {
   bcrypt,
   getAllItems,
   getItemById,
+  getReviewsByItemId,
+  getReviewById,
+  createReview,
+  deleteReview,
+  editReview,
   createTables,
 };
