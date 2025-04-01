@@ -121,14 +121,14 @@ async function shouldSeedDatabase() {
 
 const seedDatabase = async () => {
   try {
-    console.log("🔄 Resetting and seeding database...");
+    console.log(" Resetting and seeding database...");
 
     await client.query(
       "TRUNCATE comments, reviews, items, users RESTART IDENTITY CASCADE"
     );
-    console.log("✅ Tables truncated.");
+    console.log(" Tables truncated.");
 
-    // ✅ Seed users and store generated IDs
+    //  Seed users and store generated IDs
     const userIds = [];
     for (const user of users) {
       const result = await client.query(
@@ -139,11 +139,11 @@ const seedDatabase = async () => {
       console.log("Inserted user:", result.rows[0].id);
       userIds.push(result.rows[0].id);
     }
-    console.log("✅ Users seeded:", userIds);
+    console.log(" Users seeded:", userIds);
 
     if (userIds.length === 0) throw new Error("No users found!");
 
-    // ✅ Seed items and store generated IDs
+    //  Seed items and store generated IDs
     const itemIds = [];
     for (const item of clothingItems) {
       const result = await client.query(
@@ -154,11 +154,11 @@ const seedDatabase = async () => {
       console.log("Inserted item:", result.rows[0].id);
       itemIds.push(result.rows[0].id);
     }
-    console.log("✅ Items seeded:", itemIds);
+    console.log(" Items seeded:", itemIds);
 
     if (itemIds.length === 0) throw new Error("No items found!");
 
-    // ✅ Ensure users exist before inserting reviews
+    //  Ensure users exist before inserting reviews
     const existingReviews = new Set(); // Track inserted (user_id, item_id) pairs
 
     for (const review of reviews) {
@@ -182,16 +182,16 @@ const seedDatabase = async () => {
         [randomUserId, randomItemId, review.rating, review.review_text]
       );
     }
-    console.log("✅ Reviews seeded:");
+    console.log(" Reviews seeded:");
 
-    // ✅ Seed comments using valid user_id and review_id
+    //  Seed comments using valid user_id and review_id
 
     let reviewIds = [];
     const reviewQueryResult = await client.query("SELECT id FROM reviews");
     reviewIds = reviewQueryResult.rows.map((row) => row.id);
 
     if (reviewIds.length === 0) {
-      throw new Error("❌ Cannot seed comments: No reviews found.");
+      throw new Error(" Cannot seed comments: No reviews found.");
     }
 
     for (const comment of comments) {
@@ -208,11 +208,11 @@ const seedDatabase = async () => {
         [randomUserId, randomReviewId, comment.comment_text]
       );
     }
-    console.log("✅ Comments seeded.");
+    console.log(" Comments seeded.");
 
-    console.log("🎉 Database seeding complete.");
+    console.log(" Database seeding complete.");
   } catch (error) {
-    console.error("❌ Error seeding database:", error.message);
+    console.error(" Error seeding database:", error.message);
   }
 };
 /*
