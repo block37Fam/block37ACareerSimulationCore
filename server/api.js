@@ -5,7 +5,6 @@ const {
   client, 
   registerUser,
   loginUser,
-
   getUserById,
   getAuthenticatedUser,
 
