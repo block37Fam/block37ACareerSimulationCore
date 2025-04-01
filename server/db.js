@@ -236,13 +236,24 @@ const deleteComment = async (userId, commentId) => {
 
 // -- Utility & Middleware --
 
-const hashPassword = async (password) => {}; //Hashes passwords using bcrypt
+const hashPassword = async (password) => {
+    const SALT_ROUNDS = 10;
+    return await bcrypt.hash(password, SALT_ROUNDS);
+}; //Hashes passwords using bcrypt
 
-const comparePasswords = async (plainPassword, hashedPassword) => {}; //Compares passwords
+const comparePasswords = async (plainPassword, hashedPassword) => {
+    return await bcrypt.compare(plainPassword, hashedPassword);
+  }; // Compares passwords
 
-const generateJWT = async (plainPassword, hashedPassword) => {}; //Generates a JWT for authentication
+  const generateJWT = (user) => {
+    const payload = { id: user.id };
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+    return token;
+  }; // Generates a JWT for authentication
 
-const verifyJWT = async (token) => {}; //Verifies and decodes a JWT
+  const verifyJWT = (token) => {
+    return jwt.verify(token, process.env.JWT_SECRET);
+  }; // Verifies and decodes a JWT
 
 module.exports = {
   client,
