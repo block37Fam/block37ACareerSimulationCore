@@ -169,4 +169,9 @@ module.exports = {
   loginUser,
   getUserById,
   getAuthenticatedUser,
+  hashPassword,
+  comparePasswords,
+  generateJWT,
+  verifyJWT,
+  
 };
