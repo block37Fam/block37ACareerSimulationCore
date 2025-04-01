@@ -7,7 +7,7 @@ const {
   createComment,
   updateComment, 
   deleteComment,
-} = require('./db');
+} = require('../db');
 
 // API routes
 

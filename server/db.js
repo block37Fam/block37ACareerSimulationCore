@@ -67,7 +67,8 @@ const registerUser = async ({ username, email, password }) => {
     return rows[0];
 };
 
-const loginUser = async (email, password) => {
+//updated(moon): wrapped the 2 params 'email, password' with {}
+const loginUser = async ({email, password}) => {
     const SQL = /*sql*/ `
         SELECT * FROM users WHERE email = $1
     `;
@@ -247,12 +248,12 @@ const comparePasswords = async (plainPassword, hashedPassword) => {
 
   const generateJWT = (user) => {
     const payload = { id: user.id };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign(payload, process.env.JWT_SECRET ||'your_jwt_secret', { expiresIn: '1h' });
     return token;
   }; // Generates a JWT for authentication
 
   const verifyJWT = (token) => {
-    return jwt.verify(token, process.env.JWT_SECRET);
+    return jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret');
   }; // Verifies and decodes a JWT
 
 module.exports = {

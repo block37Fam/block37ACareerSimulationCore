@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
-const apiRouter = require('./api');
+const apiRrouter = require('./api');
 
 const { 
   client,
@@ -11,7 +11,7 @@ const {
 
 app.use(express.json());
 app.use(morgan("dev"));
-app.use('/api', apiRouter);
+app.use('/api', apiRrouter);
 
 const init = async () => {
   // Connect to the database

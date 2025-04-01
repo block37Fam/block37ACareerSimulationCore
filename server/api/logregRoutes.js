@@ -2,10 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 const {
-  client, 
   registerUser,
-  loginUser 
-} = require('./db');
+  loginUser
+} = require('../db');
 
 
 router.post('/register', async (req, res, next) => {
@@ -16,18 +15,18 @@ router.post('/register', async (req, res, next) => {
     } catch (err) {
       next(err);
     }
-  });
+});
   
 
-  router.post('/login', async (req, res, next) => {
+router.post('/login', async (req, res, next) => {
     try {
       const { email, password } = req.body;
-      const user = await loginUser(email, password);
+      const user = await loginUser({email, password});
       res.send(user);
     } catch (err) {
       next(err);
     }
-  });
+});
   
 
 module.exports = router;

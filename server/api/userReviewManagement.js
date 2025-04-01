@@ -3,7 +3,7 @@ const router = express.Router();
 
 const {
     getUserReviews
-} = require('./db');
+} = require('../db');
 
 // API routes
 
