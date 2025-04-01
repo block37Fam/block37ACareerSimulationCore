@@ -6,7 +6,7 @@ const {
     getReviewById,
     createReview,
     deleteReview,
-} = require('./db');
+} = require('../db');
 
 // API routes
 

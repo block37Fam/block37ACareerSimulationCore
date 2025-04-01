@@ -6,7 +6,7 @@ const {
     comparePasswords, 
     generateJWT, 
     verifyJWT 
-} = require('./db');
+} = require('../db');
 
 // API routes
 

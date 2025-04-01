@@ -4,7 +4,7 @@ const router = express.Router();
 const {
     getAllItems,
     getItemByID
-} = require('./db');
+} = require('../db');
 
 // API routes
 
