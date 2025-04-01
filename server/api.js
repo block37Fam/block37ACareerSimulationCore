@@ -5,6 +5,7 @@ const {
   client, 
   registerUser,
   loginUser,
+
   getUserById,
   getAuthenticatedUser,
 
@@ -17,11 +18,7 @@ const {
   deleteReview,
   getUserReviews,
 
-  getCommentsByUser,
-  getCommentsByReviewID,
-  createComment,
-  updateComment, 
-  deleteComment,
+
 
   hashPassword, 
   comparePasswords, 
