@@ -148,4 +148,13 @@ module.exports = {
   uuid,
   bcrypt,
   createTables,
+  registerUser,
+  loginUser,
+  getUserById,
+  getAuthenticatedUser,
+  hashPassword,
+  comparePasswords,
+  generateJWT,
+  verifyJWT,
+  
 };
