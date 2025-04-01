@@ -5,10 +5,8 @@ const morgan = require("morgan");
 const apiRouter = require('./api');
 
 const { 
-  client, 
-  uuid, 
-  bcrypt, 
-  createTables 
+  client,
+  createTables,
 } = require("./db");
 
 app.use(express.json());
@@ -18,16 +16,16 @@ app.use('/api', apiRouter);
 const init = async () => {
   // Connect to the database
   const PORT = process.env.PORT || 3000;
-    console.log("Connecting to database...");
-    await client.connect();
-    console.log("Connected to database.");
-    await createTables();
-    console.log("Created tables.");
+  console.log("Connecting to database...");
+  await client.connect();
+  console.log("Connected to database.");
+  await createTables();
+  console.log("Created tables.");
 
-    // Start the server
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}.`);
-    })
+  // Start the server
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}.`);
+  })
 };
 
 init();

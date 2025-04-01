@@ -90,7 +90,7 @@ const loginUser = async (email, password) => {
 
 //-- User Management --
 
-const getUserById = async (user_id) => {
+const getUserById = async (userId) => {
     const SQL = /*sql*/`
         SELECT id, username, email, created_at FROM users WHERE id = $1
     `;
@@ -114,26 +114,26 @@ const getAllItems = async () => {
     return response.rows;
 }; //Fetches all items
 
-const getItemById = async (item_id) => {
+const getItemById = async (itemId) => {
     const SQL = /*SQL*/ `
     SELECT * 
     FROM items
-    WHERE item_id = $1;
+    WHERE id = $1;
 `;
-const response = await client.query(SQL, [user_id]);
-return response.rows;
+const response = await client.query(SQL, [itemId]);
+return response.rows[0];
 }; //Retrieves a single item by ID
 
 // -- Review Management --
 
-const getReviewsByItemId = async (item_id) => {
+const getReviewsByItemId = async (reviewId) => {
     const SQL = /*SQL*/ `
     SELECT * 
     FROM reviews
-    WHERE item_id = $1;
+    WHERE id = $1;
 `;
-const response = await client.query(SQL, [item_id]);
-return response.rows;
+const response = await client.query(SQL, [reviewId]);
+return response.rows[0];
 }; //Retrieves all reviews for a specific item
 
 const getReviewById = async (review_id) => {
@@ -146,11 +146,11 @@ const response = await client.query(SQL, [review_id]);
 return response.rows;
 }; //Retrieves a specific review
 
-const createReview = async (user_id, item_id, rating, reviewText) => {
+const createReview = async (user_id, item_id, rating, review_text) => {
     const SQL = /*SQL*/ `
-    INSERT INTO reviews(id, user_id, item_id, rating, reviewText) VALUES($1, $2, $3, $4) RETURNING *;
+    INSERT INTO reviews(id, user_id, item_id, rating, review_text) VALUES($1, $2, $3, $4) RETURNING *;
   `;
-  const response = await client.query(SQL, [uuid.v4(), user_id, item_id, rating, reviewText])
+  const response = await client.query(SQL, [uuid.v4(), user_id, item_id, rating, review_text])
   return response.rows[0]
 }; //Adds a new review
 
@@ -175,19 +175,64 @@ const editReview = async ({ user_id, id, rating, reviewText }) => { // id is rev
 
 // -- User Review Management --
 
-const getUserReviews = async (userId) => {}; //Fetches all reviews written by a user
+const getUserReviews = async (userId) => {
+    const SQL = /*sql*/ `
+        SELECT * FROM reviews 
+        WHERE user_id = $1
+    `;
+    const { rows } = await client.query(SQL, [userId]);
+    return rows;
+}; //Fetches all reviews written by a user
 
 // -- Comment Management --
 
-const getCommentsByUser = async (userId) => {}; //Retrieves all comments written by a user
+const getCommentsByUser = async (userId) => {
+    const SQL = /*sql*/ `
+        SELECT * FROM comments 
+        WHERE user_id = $1
+        ORDER BY created_at DESC
+    `;
+    const { rows } = await client.query(SQL, [userId]);
+    return rows;
+}; //Retrieves all comments written by a user
 
-const getCommentsByReviewID = async (reviewId) => {}; //Fetches all comments on a review
+const getCommentsByReviewID = async (reviewId) => {
+    const SQL = /*sql*/ `
+        SELECT * FROM comments 
+        WHERE review_id = $1
+    `;
+    const { rows } = await client.query(SQL, [reviewId]);
+    return rows;
+}; //Fetches all comments on a review
 
-const createComment = async (userId, reviewId, commentText) => {}; //Adds a comment
+const createComment = async (userId, reviewId, commentText) => {
+    const SQL = /*sql*/ `
+        INSERT INTO comments (user_id, review_id, comment_text)
+        VALUES ($1, $2, $3)
+        RETURNING id, user_id, review_id, comment_text, created_at;
+    `;
+    const { rows } = await client.query(SQL, [userId, reviewId, commentText]);
+    return rows[0];
+}; //Adds a comment
 
-const updateComment = async (userId, commentId, commentText) => {}; //Edits a comment
+const updateComment = async (userId, commentId, commentText) => {
+    const SQL = /*sql*/ `
+        UPDATE comments
+        SET comment_text = $3, updated_at = NOW()
+        WHERE user_id = $1 AND id = $2
+        RETURNING *;
+    `;
+    const { rows } = await client.query(SQL, [userId, commentId, commentText]);
+    return rows[0]; // returns the updated comment
+}; //Edits a comment
 
-const deleteComment = async (userId, commentId) => {}; //Deletes a comment
+const deleteComment = async (userId, commentId) => {
+    const SQL = /*sql*/ `
+        DELETE FROM comments
+        WHERE user_id = $1 AND id = $2;
+    `;
+    await client.query(SQL, [userId, commentId]);
+}; //Deletes a comment
 
 // -- Utility & Middleware --
 
@@ -219,5 +264,10 @@ module.exports = {
   comparePasswords,
   generateJWT,
   verifyJWT,
-  
+  getUserReviews, 
+  getCommentsByUser,
+  getCommentsByReviewID,
+  createComment,
+  updateComment,
+  deleteComment,
 };
