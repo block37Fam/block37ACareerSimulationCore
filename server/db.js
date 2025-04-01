@@ -1,8 +1,7 @@
-require("dotenv").config();
+const pg = require('pg');
 const uuid = require("uuid");
 const bcrypt = require("bcrypt");
-const { Client } = require("pg");
-const client = new Client(process.env.DATABASE_URL);
+const client = new pg.Client(process.env.DATABASE_URL || 'postgres://localhost:/review_site_db');
 
 const createTables = async () => {
   //Users Table
@@ -12,10 +11,10 @@ const createTables = async () => {
         /* I commented out this portion because I am unsure if 
          this is how it should be written. */
          
-   -- DROP TABLE IF EXISTS users;
-   -- DROP TABLE IF EXISTS items;
-   -- DROP TABLE IF EXISTS reviews;
-   -- DROP TABLE IF EXISTS comments;
+    DROP TABLE IF EXISTS comments;
+    DROP TABLE IF EXISTS reviews;
+    DROP TABLE IF EXISTS items;
+    DROP TABLE IF EXISTS users;
 
     CREATE TABLE users (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -54,7 +53,9 @@ const createTables = async () => {
         created_at TIMESTAMP DEFAULT NOW(),
         updated_at TIMESTAMP DEFAULT NOW()
     );
-`;
+    `
+    await client.query(SQL);
+
 };
 
 const registerUser = async (username, email, password) => {}; // Handles user registration

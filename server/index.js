@@ -1,22 +1,33 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
-const PORT = process.env.PORT;
-const { client, uuid, bcrypt, createTables } = require("./db");
+const apiRouter = require('./api');
 
-pp.use(express.json());
+const { 
+  client, 
+  uuid, 
+  bcrypt, 
+  createTables 
+} = require("./db");
+
+app.use(express.json());
 app.use(morgan("dev"));
+app.use('/api', apiRouter);
 
 const init = async () => {
-  try {
+  // Connect to the database
+  const PORT = process.env.PORT || 3000;
     console.log("Connecting to database...");
     await client.connect();
     console.log("Connected to database.");
     await createTables();
     console.log("Created tables.");
-  } catch (error) {
-    console.error("Error initializing database:", error);
-  }
+
+    // Start the server
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}.`);
+    })
 };
 
 init();
