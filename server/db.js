@@ -1,16 +1,14 @@
 const pg = require('pg');
 const uuid = require("uuid");
 const bcrypt = require("bcrypt");
-const client = new pg.Client(process.env.DATABASE_URL || 'postgres://localhost:/review_site_db');
+const jwt = require("jsonwebtoken");
+const client = new pg.Client(process.env.DATABASE_URL || 'postgres://localhost/review_site_db');
 
 const createTables = async () => {
   //Users Table
   const SQL =
     /*SQL*/
-    `
-        /* I commented out this portion because I am unsure if 
-         this is how it should be written. */
-         
+    `    
     DROP TABLE IF EXISTS comments;
     DROP TABLE IF EXISTS reviews;
     DROP TABLE IF EXISTS items;
@@ -58,13 +56,50 @@ const createTables = async () => {
 
 };
 
-const registerUser = async (username, email, password) => {}; // Handles user registration
+const registerUser = async ({ username, email, password }) => {
+    const password_hash = await hashPassword(password);
+    const SQL = /*sql*/`
+        INSERT INTO users (username, email, password_hash)
+        VALUES ($1, $2, $3)
+        RETURNING id, username, email, created_at;
+    `
+    const { rows } = await client.query(SQL, [username, email, password_hash]);
+    return rows[0];
+};
 
-const loginUser = async (email, password) => {}; //Authenticates a user and returns a JWT
+const loginUser = async (email, password) => {
+    const SQL = /*sql*/ `
+        SELECT * FROM users WHERE email = $1
+    `;
+    const { rows } = await client.query(SQL, [email]);
 
-const getUserById = async (userId) => {}; //Retrieves user details
+    const user = rows[0];
+    if (!user) throw new Error("User not found");
 
-const getAuthenticatedUser = async (token) => {}; //Decodes JWT and fetches logged-in user
+    const isValid = await comparePasswords(password, user.password_hash);
+    if (!isValid) throw new Error("Invalid password");
+
+    const token = generateJWT(user); 
+    return {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      token,
+    };
+};
+
+const getUserById = async (userId) => {
+    const SQL = /*sql*/`
+        SELECT id, username, email, created_at FROM users WHERE id = $1
+    `;
+    const { rows } = await client.query(SQL, [userId]);
+    return rows[0];
+};
+
+const getAuthenticatedUser = async (token) => {
+    const payload = verifyJWT(token);
+    return await getUserById(payload.id);
+}; 
 
 // -- Item Management --
 
