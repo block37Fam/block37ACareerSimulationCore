@@ -1,86 +1,62 @@
 # block37ACareerSimulationCore
 
-PK = PRIMARY KEY
-FK = FOREIGN KEY
-
-VARCHAR VARIABLE NEEDS MAX INPUT #
-
-TABLES & RELATATIONSHIPS
+### Definitions
+- `PK`: PRIMARY KEY
+- `FK`: FOREIGN KEY
+- `VARCHAR`: Variable-length character string (specify maximum length)
 
 ---
 
--USERS (stores user information)
+## Tables & Relationships
 
-id (PK, UUID, unique)
+### USERS (stores user information)
+```sql
+id              UUID PRIMARY KEY UNIQUE
+username        VARCHAR(50) UNIQUE NOT NULL
+email           VARCHAR(100) UNIQUE NOT NULL
+password_hash   TEXT NOT NULL
+created_at      TIMESTAMP DEFAULT NOW()
+updated_at      TIMESTAMP DEFAULT NOW()
+```
 
-username (VARCHAR, unique, not null)
+### ITEMS (stores reviewed items)
+```sql
+id              UUID PRIMARY KEY UNIQUE
+name            VARCHAR(100) NOT NULL
+description     TEXT
+average_rating  FLOAT DEFAULT 0
+created_at      TIMESTAMP DEFAULT NOW()
+updated_at      TIMESTAMP DEFAULT NOW()
+```
 
-email (VARCHAR, unique, not null)
+### REVIEWS (stores user reviews for items)
+```sql
+id              UUID PRIMARY KEY UNIQUE
+user_id         UUID REFERENCES USERS(id) ON DELETE CASCADE
+item_id         UUID REFERENCES ITEMS(id) ON DELETE CASCADE
+rating          INTEGER CHECK(rating >= 1 AND rating <= 5) NOT NULL
+review_text     TEXT NOT NULL
+created_at      TIMESTAMP DEFAULT NOW()
+updated_at      TIMESTAMP DEFAULT NOW()
 
-password_hash (TEXT, not null)
+-- Unique Constraint to prevent duplicate reviews per user per item
+UNIQUE (user_id, item_id)
+```
 
-created_at (TIMESTAMP, default now())
-
-updated_at (TIMESTAMP, default now())
-
----
-
--ITEMS (stores reviewed items)
-
-id (PK, UUID, unique)
-
-name (VARCHAR, not null)
-
-description (TEXT)
-
-average_rating (FLOAT, default 0)
-
-created_at (TIMESTAMP, default now())
-
-updated_at (TIMESTAMP, default now())
-
----
-
--REVIEWS (stores user reviews for items)
-
-id (PK, UUID, unique)
-
-user_id (FK → Users.id, on delete CASCADE)
-
-item_id (FK → Items.id, on delete CASCADE)
-
-rating (INTEGER, 1-5, not null)
-
-review_text (TEXT, not null)
-
-created_at (TIMESTAMP, default now())
-
-updated_at (TIMESTAMP, default now())
-
-(Unique Constraint: user_id + item_id to prevent duplicate reviews per user per item)
+### COMMENTS (stores user comments on reviews)
+```sql
+id              UUID PRIMARY KEY UNIQUE
+user_id         UUID REFERENCES USERS(id) ON DELETE CASCADE
+review_id       UUID REFERENCES REVIEWS(id) ON DELETE CASCADE
+comment_text    TEXT NOT NULL
+created_at      TIMESTAMP DEFAULT NOW()
+updated_at      TIMESTAMP DEFAULT NOW()
+```
 
 ---
 
--COMMENTS (stores user comments on reviews)
+## Indexes & Constraints
 
-id (PK, UUID, unique)
-
-user_id (FK → Users.id, on delete CASCADE)
-
-review_id (FK → Reviews.id, on delete CASCADE)
-
-comment_text (TEXT, not null)
-
-created_at (TIMESTAMP, default now())
-
-updated_at (TIMESTAMP, default now())
-
----
-
--INDEXES & CONSTRAINTS
-
-Index on average_rating in Items for sorting performance.
-
-Foreign key constraints for cascading deletions.
-
-Unique constraint on (user_id, item_id) in Reviews to prevent multiple reviews per item by the same user.
+- **Index** on `average_rating` in `ITEMS` table for sorting performance.
+- **Foreign Key Constraints** (`ON DELETE CASCADE`) to maintain referential integrity.
+- **Unique Constraint** on `(user_id, item_id)` in `REVIEWS` table to ensure each user can only review an item once.
