@@ -7,4 +7,9 @@ const {
 
 // API routes
 
+//GET /api/reviews/me 🔒
+
+
+
+
 module.exports = router;
