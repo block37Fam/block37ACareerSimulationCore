@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const requireUser = require('../middleware/requireUser');
 
 const {
-    getAuthenticatedUser,
     getReviewsByItemId,
     getReviewById,
     createReview,
@@ -39,15 +39,9 @@ router.get('/items/:itemId/reviews/:reviewId', async(req, res, next) => {
 })
 
 //POST /api/items/:itemId/reviews 🔒 postman requst verified!
-router.post('/items/:itemId/reviews', async(req, res, next) => {
+router.post('/items/:itemId/reviews', requireUser, async(req, res, next) => {
     try {
-        const authHeader = req.headers.authorization; // Bearer <token>
-        if (!authHeader) {
-          return res.status(401).send({ error: 'Token required' });
-        }
-        const token = authHeader.replace('Bearer ', '');
-        const user = await getAuthenticatedUser(token);
-        const user_id = user.id
+        const user_id = req.user.id
         const item_id = req.params.itemId
         const rating = req.body.rating
         const review_text = req.body.review_text
@@ -64,15 +58,9 @@ router.post('/items/:itemId/reviews', async(req, res, next) => {
 }) 
 
 //PUT /api/users/:userId/reviews/:reviewId 🔒 postman request verified!
-router.put('/users/:userId/reviews/:reviewId', async(req, res, next) => {
+router.put('/users/:userId/reviews/:reviewId', requireUser, async(req, res, next) => {
     try {
-        const authHeader = req.headers.authorization; // Bearer <token>
-        if (!authHeader) {
-          return res.status(401).send({ error: 'Token required' });
-        }
-        const token = authHeader.replace('Bearer ', '');
-        const user = await getAuthenticatedUser(token);
-        const user_id = user.id
+        const user_id = req.user.id
         const id = req.params.reviewId
         const rating = req.body.rating
         const review_text = req.body.review_text
@@ -93,14 +81,8 @@ router.put('/users/:userId/reviews/:reviewId', async(req, res, next) => {
 })
 
 //DELETE /api/users/:userId/reviews/:reviewId 🔒
-router.delete('/users/:userId/reviews/:reviewId', async(req, res, next) => {
+router.delete('/users/:userId/reviews/:reviewId', requireUser, async(req, res, next) => {
     try {
-        const authHeader = req.headers.authorization; // Bearer <token>
-        if (!authHeader) {
-            return res.status(401).send({ error: 'Token required' });
-        }
-        const token = authHeader.replace('Bearer ', '');
-        const user = await getAuthenticatedUser(token);
         const user_id = user.id
         const id = req.params.reviewId
         if(user_id === req.params.userId ){

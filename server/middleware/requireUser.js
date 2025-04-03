@@ -1,4 +1,4 @@
-const { verifyJWT } = require('/..db');
+const { verifyJWT } = require('../db');
 
 const requireUser = (req, res, next) => {
   const authHeader = req.headers.authorization;
