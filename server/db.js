@@ -262,6 +262,8 @@ const comparePasswords = async (plainPassword, hashedPassword) => {
 
 module.exports = {
   client,
+  createTables,
+  registerUser,
   uuid,
   bcrypt,
   getAllItems,
@@ -271,8 +273,6 @@ module.exports = {
   createReview,
   deleteReview,
   editReview,
-  createTables,
-  registerUser,
   loginUser,
   getUserById,
   getAuthenticatedUser,

@@ -3,7 +3,7 @@ const router = express.Router();
 
 // API routes
 const logregRouter = require('./api/logregRoutes')
-const userMangement = require('./api/userManagement')
+const userManagement = require('./api/userManagement')
 const itemManagement = require('./api/itemManagement')
 const userReviewManagement = require('./api/userReviewManagement')
 const reviewManagement = require('./api/reviewManagement')
