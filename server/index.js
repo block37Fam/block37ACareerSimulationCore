@@ -24,31 +24,6 @@ const init = async () => {
   await createTables();
   console.log("Created tables.");
 
-  const users = Array.from({ length: 50 }, (_, i) => ({
-    id: uuid.v4(),
-    username: `user${i + 1}`,
-    email: `user${i + 1}@example.com`,
-    password: '123' // plain text for now; should be hashed in registerUser
-  }));
-
-  const items = Array.from({ length: 50 }, (_, i) => ({
-    id: uuid.v4(),
-    name: `Item ${i + 1}`,
-    description: `This is a description for item ${i + 1}.`
-  }));
-  
-  const reviews = Array.from({ length: 50 }, () => {
-    const user = users[Math.floor(Math.random() * users.length)];
-    const item = items[Math.floor(Math.random() * items.length)];
-    return {
-      id: uuid.v4(),
-      user_id: user.id,
-      item_id: item.id,
-      rating: Math.ceil(Math.random() * 5),
-      review_text: "This is a review."
-    };
-  });
-
   // Start the server
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
