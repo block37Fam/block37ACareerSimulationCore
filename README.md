@@ -1,4 +1,4 @@
-# block37ACareerSimulationCore
+# 37Block - Career Simulation Core 👨‍💻👩‍💻
 
 ### Definitions
 - `PK`: PRIMARY KEY
