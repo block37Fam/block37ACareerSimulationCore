@@ -2,6 +2,7 @@ const pg = require('pg');
 const uuid = require("uuid");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const seed = require("./seed.js")
 const client = new pg.Client(process.env.DATABASE_URL || 'postgres://localhost/review_site_db');
 
 const createTables = async () => {
@@ -258,6 +259,8 @@ const comparePasswords = async (plainPassword, hashedPassword) => {
 
 module.exports = {
   client,
+  createTables,
+  registerUser,
   uuid,
   bcrypt,
   getAllItems,
@@ -267,8 +270,6 @@ module.exports = {
   createReview,
   deleteReview,
   editReview,
-  createTables,
-  registerUser,
   loginUser,
   getUserById,
   getAuthenticatedUser,
