@@ -3,7 +3,7 @@ const router = express.Router();
 
 const {
     getAllItems,
-    getItemByID
+    getItemById
 } = require('../db');
 
 // API routes
