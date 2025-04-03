@@ -5,11 +5,12 @@ const router = express.Router();
 const logregRouter = require('./api/logregRoutes')
 const userManagement = require('./api/userManagement')
 const itemManagement = require('./api/itemManagement')
+const userReviewManagement = require('./api/userReviewManagement')
 const reviewManagement = require('./api/reviewManagement')
-
 router.use('/auth', logregRouter)
-router.use('/auth', userManagement)
+router.use('/auth', userMangement)
 router.use('/items', itemManagement)
-router.use('/reviews', reviewManagement)
+router.use('/review', userReviewManagement)
+router.use('/', reviewManagement)
 
 module.exports = router;

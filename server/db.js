@@ -51,6 +51,9 @@ const createTables = async () => {
         created_at TIMESTAMP DEFAULT NOW(),
         updated_at TIMESTAMP DEFAULT NOW()
     );
+
+    INSERT INTO items (name, description) VALUES('food', 'test');
+    INSERT INTO items (name, description) VALUES('cook', 'test');
     `
     await client.query(SQL);
 
@@ -127,29 +130,30 @@ return response.rows[0];
 
 // -- Review Management --
 
-const getReviewsByItemId = async (reviewId) => {
+const getReviewsByItemId = async (itemId) => {
     const SQL = /*SQL*/ `
     SELECT * 
     FROM reviews
-    WHERE id = $1;
+    WHERE item_id = $1;
 `;
-const response = await client.query(SQL, [reviewId]);
+const response = await client.query(SQL, [itemId]);
 return response.rows[0];
 }; //Retrieves all reviews for a specific item
 
-const getReviewById = async (review_id) => {
+const getReviewById = async ({review_id, item_id}) => {
     const SQL = /*SQL*/ `
     SELECT * 
     FROM reviews
-    WHERE review_id = $1;
+    WHERE id = $1 AND item_id = $2;
 `;
-const response = await client.query(SQL, [review_id]);
+const response = await client.query(SQL, [review_id, item_id]);
 return response.rows;
 }; //Retrieves a specific review
 
-const createReview = async (user_id, item_id, rating, review_text) => {
+const createReview = async ({user_id, item_id, rating, review_text}) => {
     const SQL = /*SQL*/ `
-    INSERT INTO reviews(id, user_id, item_id, rating, review_text) VALUES($1, $2, $3, $4) RETURNING *;
+    INSERT INTO reviews(id, user_id, item_id, rating, review_text) 
+    VALUES($1, $2, $3, $4, $5) RETURNING *;
   `;
   const response = await client.query(SQL, [uuid.v4(), user_id, item_id, rating, review_text])
   return response.rows[0]

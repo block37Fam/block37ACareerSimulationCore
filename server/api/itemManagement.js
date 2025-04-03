@@ -7,6 +7,7 @@ const {
 } = require('../db');
 
 // API routes
+//GET /api/items verified!
 router.get('/', async(req, res, next) => {
     try {
         const response = await getAllItems()
@@ -16,6 +17,7 @@ router.get('/', async(req, res, next) => {
     }
 })
 
+//GET /api/items/:itemId verified!
 router.get('/:itemId', async(req, res, next) => {
     try {
         const itemId = req.params.itemId

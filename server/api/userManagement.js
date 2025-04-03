@@ -1,13 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const {
-    getUserById,
-    getAuthenticatedUser
-} = require('../db');
+const { getAuthenticatedUser } = require('../db');
 
 // API routes 
-//GET /api/auth/me 🔒 unvertified yet!
+//GET /api/auth/me 🔒 postman requset vertified
 router.get('/me', async (req, res, next) => {
     try {
       const authHeader = req.headers.authorization; // Bearer <token>

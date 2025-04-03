@@ -11,4 +11,17 @@ const {
 
 // API routes
 
+//GET /api/comments/me 🔒
+
+
+
+//POST /api/items/:itemId/reviews/:reviewId/comments 🔒
+
+
+//PUT /api/users/:userId/comments/:commentId 🔒
+
+
+//DELETE /api/users/:userId/comments/:commentId 🔒
+
+
 module.exports = router;
