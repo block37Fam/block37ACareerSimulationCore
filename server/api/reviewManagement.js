@@ -99,10 +99,10 @@ router.put('/users/:userId/reviews/:reviewId', requireUser, async(req, res, next
 //DELETE /api/users/:userId/reviews/:reviewId 🔒
 router.delete('/users/:userId/reviews/:reviewId', requireUser, async(req, res, next) => {
     try {
-        const user_id = user.id
+        const user_id = req.user.id
         const id = req.params.reviewId
         if(user_id === req.params.userId ){
-            await deleteReview({user_id: req.params.userId, id:id})
+            await deleteReview({user_id: req.params.userId, id})
             return res.status(204).send()
         }
     } catch (error) {

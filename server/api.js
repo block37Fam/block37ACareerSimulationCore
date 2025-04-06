@@ -10,7 +10,7 @@ const reviewManagement = require('./api/reviewManagement')
 router.use('/auth', logregRouter)
 router.use('/auth', userManagement)
 router.use('/items', itemManagement)
-router.use('/review', userReviewManagement)
+router.use('/reviews', userReviewManagement)
 router.use('/', reviewManagement)
 
 module.exports = router;
