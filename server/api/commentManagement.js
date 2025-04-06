@@ -9,7 +9,6 @@ const {
   deleteComment,
 } = require('../db');
 
-
 router.get('/user/:userId', async (req, res, next) => {
   try {
     const { userId } = req.params;
