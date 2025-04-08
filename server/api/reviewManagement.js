@@ -10,6 +10,22 @@ const {
     deleteReview
 } = require('../db');
 
+
+router.post('/', async (req, res, next) => {
+    try {
+      const { userId, itemId, rating, reviewText } = req.body;
+  
+      if (!userId || !itemId || !rating || !reviewText) {
+        return res.status(400).json({ error: 'Missing required fields' });
+      }
+  
+      const newReview = await createReview(userId, itemId, rating, reviewText);
+      res.status(201).send(newReview);
+    } catch (err) {
+      next(err);
+    }
+  });
+
 // API routes
 
 //GET /api/items/:itemId/reviews postman request verified!
@@ -93,5 +109,6 @@ router.delete('/users/:userId/reviews/:reviewId', requireUser, async(req, res, n
         next(error)
     }
 })
+
 
 module.exports = router;

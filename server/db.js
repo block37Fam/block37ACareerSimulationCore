@@ -109,6 +109,19 @@ const getAuthenticatedUser = async (token) => {
 
 // -- Item Management --
 
+//Made createItem to test 
+
+const createItem = async (name, description) => {
+    const SQL = `
+      INSERT INTO items (id, name, description)
+      VALUES ($1, $2, $3)
+      RETURNING *;
+    `;
+    const { rows } = await client.query(SQL, [uuid.v4(), name, description]);
+    return rows[0];
+  };
+  
+
 const getAllItems = async () => {
     const SQL = /*SQL*/ `
         SELECT *
@@ -266,6 +279,7 @@ module.exports = {
   registerUser,
   uuid,
   bcrypt,
+  createItem,
   getAllItems,
   getItemById,
   getReviewsByItemId,
